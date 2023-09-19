@@ -1,0 +1,38 @@
+function solveSudoku(grid):
+    if grid is full:
+        return true
+
+    find an empty cell (row, col)
+    
+    for num from 1 to 9:
+        if num can be placed in (row, col):
+            place num in (row, col)
+            
+            if solveSudoku(grid):
+                return true
+            
+            remove num from (row, col) # Backtrack if num doesn't lead to a solution
+
+    return false # No valid number can be placed in this cell
+
+function isSafe(grid, row, col, num):
+    # Check if num is safe to place in (row, col)
+    for i from 0 to 8:
+        if grid[row][i] == num or grid[i][col] == num:
+            return false
+
+    startRow = row - row % 3
+    startCol = col - col % 3
+
+    for i from 0 to 2:
+        for j from 0 to 2:
+            if grid[i + startRow][j + startCol] == num:
+                return false
+
+    return true
+
+initialize Sudoku grid
+if solveSudoku(grid):
+    print the solved grid
+else:
+    print "No solution exists"
