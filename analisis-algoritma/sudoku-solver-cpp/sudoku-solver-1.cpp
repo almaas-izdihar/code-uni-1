@@ -7,7 +7,7 @@ using namespace std;
 // N is the size of the 2D matrix N*N
 #define N 9
 
-/* A utility function to print grid */
+// A utility function to print grid
 void print(int arr[N][N])
 {
 	for (int i = 0; i < N; i++)
@@ -15,8 +15,8 @@ void print(int arr[N][N])
 		for (int j = 0; j < N; j++)
 		{
 			cout << arr[i][j] << " ";
-			cout << endl;
 		}
+		cout << endl;
 	}
 }
 
@@ -29,15 +29,23 @@ bool isSafe(int grid[N][N], int row, int col, int num)
 	// in the similar row , we
 	// return false
 	for (int x = 0; x <= 8; x++)
+	{
 		if (grid[row][x] == num)
+		{
 			return false;
+		}
+	}
 
 	// Check if we find the same num in
 	// the similar column , we
 	// return false
 	for (int x = 0; x <= 8; x++)
+	{
 		if (grid[x][col] == num)
+		{
 			return false;
+		}
+	}
 
 	// Check if we find the same num in
 	// the particular 3*3 matrix,
@@ -46,18 +54,24 @@ bool isSafe(int grid[N][N], int row, int col, int num)
 	int startCol = col - col % 3;
 
 	for (int i = 0; i < 3; i++)
+	{
 		for (int j = 0; j < 3; j++)
+		{
 			if (grid[i + startRow][j + startCol] == num)
+			{
 				return false;
+			}
+		}
+	}
 
 	return true;
 }
 
-/* Takes a partially filled-in grid and attempts
-to assign values to all unassigned locations in
-such a way to meet the requirements for
-Sudoku solution (non-duplication across rows,
-columns, and boxes) */
+// Takes a partially filled-in grid and attempts
+// to assign values to all unassigned locations in
+// such a way to meet the requirements for
+// Sudoku solution (non-duplication across rows,
+// columns, and boxes)
 bool solveSudoku(int grid[N][N], int row, int col)
 {
 	// Check if we have reached the 8th
@@ -66,7 +80,9 @@ bool solveSudoku(int grid[N][N], int row, int col)
 	// returning true to avoid
 	// further backtracking
 	if (row == N - 1 && col == N)
+	{
 		return true;
+	}
 
 	// Check if column value becomes 9 ,
 	// we move to next row and
@@ -95,12 +111,12 @@ bool solveSudoku(int grid[N][N], int row, int col)
 		if (isSafe(grid, row, col, num))
 		{
 
-			/* Assigning the num in
-				the current (row,col)
-				position of the grid
-				and assuming our assigned
-				num in the position
-				is correct	 */
+			// Assigning the num in
+			// the current (row,col)
+			// position of the grid
+			// and assuming our assigned
+			// num in the position
+			// is correct
 			grid[row][col] = num;
 
 			// Checking for next possibility with next
@@ -134,7 +150,8 @@ int main()
 		{0, 5, 0, 0, 9, 0, 6, 0, 0},
 		{1, 3, 0, 0, 0, 0, 2, 5, 0},
 		{0, 0, 0, 0, 0, 0, 0, 7, 4},
-		{0, 0, 5, 2, 0, 6, 3, 0, 0}};
+		{0, 0, 5, 2, 0, 6, 3, 0, 0},
+	};
 
 	if (solveSudoku(grid, 0, 0))
 	{
