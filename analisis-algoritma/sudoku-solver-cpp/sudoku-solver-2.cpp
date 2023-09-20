@@ -1,92 +1,141 @@
+// https://www.geeksforgeeks.org/sudoku-backtracking-7/
+
 #include <iostream>
 
 using namespace std;
 
-const int N = 9;
+#define N 9
 
-// Function to print the Sudoku grid
-void printGrid(int grid[N][N]) {
-    for (int i = 0; i < N; i++) {
-        for (int j = 0; j < N; j++) {
-            cout << grid[i][j];
+unsigned long iterationIsSafe = 0;
+unsigned long iterationSolver = 0;
+unsigned long iterationAll = 0;
+
+void print(int arr[N][N])
+{
+    for (int i = 0; i < N; i++)
+    {
+        for (int j = 0; j < N; j++)
+        {
+            cout << arr[i][j] << " ";
         }
+        cout << endl;
     }
-    cout << endl;
 }
 
-// Function to check if a number can be placed in a specific cell
-bool isSafe(int grid[N][N], int row, int col, int num) {
-    // Check row and column
-    for (int i = 0; i < N; i++) {
-        if (grid[row][i] == num || grid[i][col] == num) {
+bool isSafe(int grid[N][N], int row, int col, int num)
+{
+    for (int x = 0; x <= 8; x++)
+    {
+        if (grid[row][x] == num)
+        {
             return false;
         }
+        iterationIsSafe++;
     }
 
-    // Check 3x3 subgrid
+    for (int x = 0; x <= 8; x++)
+    {
+        if (grid[x][col] == num)
+        {
+            return false;
+        }
+        iterationIsSafe++;
+    }
+
     int startRow = row - row % 3;
     int startCol = col - col % 3;
-    for (int i = 0; i < 3; i++) {
-        for (int j = 0; j < 3; j++) {
-            if (grid[i + startRow][j + startCol] == num) {
+
+    for (int i = 0; i < 3; i++)
+    {
+        for (int j = 0; j < 3; j++)
+        {
+            if (grid[i + startRow][j + startCol] == num)
+            {
                 return false;
             }
+            iterationIsSafe++;
         }
     }
 
     return true;
 }
 
-// Recursive Sudoku solver function
-bool solveSudoku(int grid[N][N], int row, int col) {
-    if (row == N - 1 && col == N) {
-        return true; // All cells have been filled
+bool solveSudoku(int grid[N][N], int row, int col)
+{
+    iterationSolver++;
+
+    if (row == N - 1 && col == N)
+    {
+        return true;
     }
 
-    if (col == N) {
+    if (col == N)
+    {
         row++;
         col = 0;
     }
 
-    if (grid[row][col] != 0) {
+    if (grid[row][col] > 0)
+    {
         return solveSudoku(grid, row, col + 1);
     }
 
-    for (int num = 1; num <= N; num++) {
-        if (isSafe(grid, row, col, num)) {
+    for (int num = 1; num <= N; num++)
+    {
+        if (isSafe(grid, row, col, num))
+        {
             grid[row][col] = num;
 
-            if (solveSudoku(grid, row, col + 1)) {
+            if (solveSudoku(grid, row, col + 1))
+            {
                 return true;
             }
-
-            grid[row][col] = 0; // If placing num doesn't lead to a solution, backtrack
         }
+        grid[row][col] = 0;
     }
-
     return false;
 }
 
-int main() {
-    // Input Sudoku puzzle as a string
-    string input = "000001200100700045000430700090006300050807020006200090003019000970004006002500000";
+// Driver Code
+int main()
+{
+    // int grid[N][N] = {
+    //     {0, 0, 0, 0, 0, 0, 0, 0, 0},
+    //     {0, 0, 0, 0, 0, 0, 0, 0, 0},
+    //     {0, 0, 0, 0, 0, 0, 0, 0, 0},
+    //     {0, 0, 0, 0, 0, 0, 0, 0, 0},
+    //     {0, 0, 0, 0, 0, 0, 0, 0, 0},
+    //     {0, 0, 0, 0, 0, 0, 0, 0, 0},
+    //     {0, 0, 0, 0, 0, 0, 0, 0, 0},
+    //     {0, 0, 0, 0, 0, 0, 0, 0, 0},
+    //     {0, 0, 0, 0, 0, 0, 0, 0, 0},
+    // };
 
-    // Convert the string into a 2D array
-    int grid[N][N];
-    int k = 0;
-    for (int i = 0; i < N; i++) {
-        for (int j = 0; j < N; j++) {
-            grid[i][j] = input[k++] - '0';
-        }
+    // 0 means unassigned cells
+    int grid[N][N] = {
+        {3, 0, 6, 5, 0, 8, 4, 0, 0},
+        {5, 2, 0, 0, 0, 0, 0, 0, 0},
+        {0, 8, 7, 0, 0, 0, 0, 3, 1},
+        {0, 0, 3, 0, 1, 0, 0, 8, 0},
+        {9, 0, 0, 8, 6, 3, 0, 0, 5},
+        {0, 5, 0, 0, 9, 0, 6, 0, 0},
+        {1, 3, 0, 0, 0, 0, 2, 5, 0},
+        {0, 0, 0, 0, 0, 0, 0, 7, 4},
+        {0, 0, 5, 2, 0, 6, 3, 0, 0},
+    };
+
+    if (solveSudoku(grid, 0, 0))
+    {
+        print(grid);
+    }
+    else
+    {
+        cout << "no solution exists " << endl;
     }
 
-    // Solve the Sudoku puzzle
-    if (solveSudoku(grid, 0, 0)) {
-        // Print the solved Sudoku grid
-        printGrid(grid);
-    } else {
-        cout << "No solution exists." << endl;
-    }
+    cout << "iteration isSafe: " << iterationIsSafe << endl;
+    cout << "iteration solver: " << iterationSolver << endl;
 
     return 0;
+    // This is code is contributed by Pradeep Mondal P
 }
