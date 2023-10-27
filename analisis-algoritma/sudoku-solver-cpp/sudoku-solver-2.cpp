@@ -1,14 +1,12 @@
-// https://www.geeksforgeeks.org/sudoku-backtracking-7/
-
 #include <iostream>
+#include <chrono>
 
 using namespace std;
+using namespace std::chrono;
 
 #define N 9
 
-unsigned long iterationIsSafe = 0;
 unsigned long iterationSolver = 0;
-unsigned long iterationAll = 0;
 
 void print(int arr[N][N])
 {
@@ -30,7 +28,6 @@ bool isSafe(int grid[N][N], int row, int col, int num)
         {
             return false;
         }
-        iterationIsSafe++;
     }
 
     for (int x = 0; x <= 8; x++)
@@ -39,7 +36,6 @@ bool isSafe(int grid[N][N], int row, int col, int num)
         {
             return false;
         }
-        iterationIsSafe++;
     }
 
     int startRow = row - row % 3;
@@ -53,7 +49,6 @@ bool isSafe(int grid[N][N], int row, int col, int num)
             {
                 return false;
             }
-            iterationIsSafe++;
         }
     }
 
@@ -99,29 +94,59 @@ bool solveSudoku(int grid[N][N], int row, int col)
 // Driver Code
 int main()
 {
+
+    auto start = high_resolution_clock::now();
+
+    // INPUT 1
     // int grid[N][N] = {
-    //     {0, 0, 0, 0, 0, 0, 0, 0, 0},
-    //     {0, 0, 0, 0, 0, 0, 0, 0, 0},
-    //     {0, 0, 0, 0, 0, 0, 0, 0, 0},
-    //     {0, 0, 0, 0, 0, 0, 0, 0, 0},
-    //     {0, 0, 0, 0, 0, 0, 0, 0, 0},
-    //     {0, 0, 0, 0, 0, 0, 0, 0, 0},
-    //     {0, 0, 0, 0, 0, 0, 0, 0, 0},
-    //     {0, 0, 0, 0, 0, 0, 0, 0, 0},
-    //     {0, 0, 0, 0, 0, 0, 0, 0, 0},
+    //     {5, 3, 0, 0, 7, 0, 0, 0, 0},
+    //     {6, 0, 0, 1, 9, 5, 0, 0, 0},
+    //     {0, 9, 8, 0, 0, 0, 0, 6, 0},
+    //     {8, 0, 0, 0, 6, 0, 0, 0, 3},
+    //     {4, 0, 0, 8, 0, 3, 0, 0, 1},
+    //     {7, 0, 0, 0, 2, 0, 0, 0, 6},
+    //     {0, 6, 0, 0, 0, 0, 2, 8, 0},
+    //     {0, 0, 0, 4, 1, 9, 0, 0, 5},
+    //     {0, 0, 0, 0, 8, 0, 0, 7, 9},
     // };
 
-    // 0 means unassigned cells
+    // // INPUT 2
+    // int grid[N][N] = {
+    //     {9, 0, 0, 1, 0, 4, 0, 0, 2},
+    //     {0, 8, 0, 0, 6, 0, 0, 7, 0},
+    //     {0, 0, 0, 0, 0, 0, 0, 0, 0},
+    //     {4, 0, 0, 0, 0, 0, 0, 0, 1},
+    //     {0, 7, 0, 0, 0, 0, 0, 3, 0},
+    //     {3, 0, 0, 0, 0, 0, 0, 0, 7},
+    //     {0, 0, 0, 0, 2, 0, 0, 0, 0},
+    //     {0, 3, 0, 0, 7, 0, 0, 8, 0},
+    //     {1, 0, 0, 0, 0, 9, 0, 0, 0},
+    // };
+
+    // // INPUT 3
+    // int grid[N][N] = {
+    //     {0, 0, 0, 0, 0, 0, 0, 0, 0},
+    //     {0, 0, 0, 0, 0, 3, 0, 8, 5},
+    //     {0, 0, 1, 0, 2, 0, 0, 0, 0},
+    //     {0, 0, 0, 5, 0, 7, 0, 0, 0},
+    //     {0, 0, 4, 0, 0, 0, 1, 0, 0},
+    //     {0, 9, 0, 0, 0, 0, 0, 0, 0},
+    //     {5, 0, 0, 0, 0, 0, 0, 7, 3},
+    //     {0, 0, 2, 0, 1, 0, 0, 0, 0},
+    //     {0, 0, 0, 0, 4, 0, 0, 0, 9},
+    // };
+
+    // EXAMPLE INPUT
     int grid[N][N] = {
-        {3, 0, 6, 5, 0, 8, 4, 0, 0},
-        {5, 2, 0, 0, 0, 0, 0, 0, 0},
-        {0, 8, 7, 0, 0, 0, 0, 3, 1},
-        {0, 0, 3, 0, 1, 0, 0, 8, 0},
-        {9, 0, 0, 8, 6, 3, 0, 0, 5},
-        {0, 5, 0, 0, 9, 0, 6, 0, 0},
-        {1, 3, 0, 0, 0, 0, 2, 5, 0},
-        {0, 0, 0, 0, 0, 0, 0, 7, 4},
-        {0, 0, 5, 2, 0, 6, 3, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0, 0},
     };
 
     if (solveSudoku(grid, 0, 0))
@@ -133,9 +158,11 @@ int main()
         cout << "no solution exists " << endl;
     }
 
-    cout << "iteration isSafe: " << iterationIsSafe << endl;
-    cout << "iteration solver: " << iterationSolver << endl;
+    auto stop = high_resolution_clock::now();
+    auto duration = duration_cast<milliseconds>(stop - start);
+
+    cout << "Jumlah Iterasi: " << iterationSolver << endl;
+    cout << "Waktu Eksekusi: " << duration.count() << " milidetik" << endl;
 
     return 0;
-    // This is code is contributed by Pradeep Mondal P
 }

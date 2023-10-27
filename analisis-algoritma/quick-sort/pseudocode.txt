@@ -1,0 +1,22 @@
+procedure quick_sort(data, awal, akhir)
+  jika akhir - awal <= 0 maka
+    kembalikan
+  lain
+    pilih data[akhir] sebagai pivot
+    partisi = partisi_data(data, awal, akhir, pivot)
+    quick_sort(data, awal, partisi - 1)
+    quick_sort(data, partisi + 1, akhir)
+  akhir jika
+akhir procedure
+
+procedure partisi_data(data, awal, akhir, pivot)
+  indeks = awal - 1
+  ulangi untuk i dari awal sampai akhir
+    jika data[i] <= pivot maka
+      indeks = indeks + 1
+      tukar data[i] dengan data[indeks]
+    akhir jika
+  akhir ulangi
+  tukar data[indeks + 1] dengan data[akhir]
+  kembalikan indeks + 1
+akhir procedure
